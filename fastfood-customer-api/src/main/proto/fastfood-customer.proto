@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package io.fiap.fastfood;
+
+import "google/protobuf/empty.proto";
+
+option java_package = "io.fiap.fastfood";
+option java_multiple_files = true;
+option java_outer_classname = "CustomerProto";
+
+/**
+* Customer service
+* @author icaro.damiani1
+*/
+service CustomerService {
+    rpc saveCustomer(SaveCustomerRequest) returns (CustomerResponse);
+    rpc updateCustomer(UpdateCustomerRequest) returns (CustomerResponse);
+    rpc deleteCustomer(DeleteCustomerRequest) returns (google.protobuf.Empty);
+    rpc findAllCustomers(FindAllCustomerRequest) returns (stream CustomerResponse);
+    rpc findCustomerById(FindCustomerByIdRequest) returns (CustomerResponse);
+    rpc findCustomerByEmail(FindCustomerByEmailRequest) returns (CustomerResponse);
+    rpc findCustomerByVat(FindCustomerByVatRequest) returns (CustomerResponse);
+}
+
+message SaveCustomerRequest {
+    optional string id = 1;
+    string name = 2;
+    string vat = 3;
+    string email = 4;
+    optional string phone = 5;
+}
+
+message UpdateCustomerRequest {
+    string id = 1;
+    string operations = 2;
+}
+
+message DeleteCustomerRequest {
+    string id = 1;
+}
+
+message FindAllCustomerRequest {
+}
+
+message FindCustomerByIdRequest {
+    string id = 1;
+}
+
+message FindCustomerByEmailRequest {
+    string email = 1;
+}
+
+message FindCustomerByVatRequest {
+    string vat = 1;
+}
+
+message CustomerResponse {
+    string id = 1;
+    string name = 2;
+    string vat = 3;
+    string email = 4;
+    optional string phone = 5;
+}

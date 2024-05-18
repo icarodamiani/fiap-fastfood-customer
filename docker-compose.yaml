@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "Postgres2024!"
+      POSTGRES_USER: "fastfood"
+      POSTGRES_DB: fastfood-customer
+    volumes:
+      - ./db/1-create-customer-table.sql:/docker-entrypoint-initdb.d/1-create-customer-table.sql
+    ports:
+      - "5432:5432"
