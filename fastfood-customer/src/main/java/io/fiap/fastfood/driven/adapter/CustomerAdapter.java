@@ -10,26 +10,36 @@ import io.fiap.fastfood.driven.core.domain.model.Customer;
 import io.fiap.fastfood.driven.core.entity.CustomerEntity;
 import io.fiap.fastfood.driven.core.exception.BadRequestException;
 import io.fiap.fastfood.driven.core.exception.DuplicatedKeyException;
+import io.fiap.fastfood.driven.core.messaging.MessagingPort;
 import io.fiap.fastfood.driven.repository.CustomerRepository;
 import io.vavr.CheckedFunction1;
 import io.vavr.CheckedFunction2;
+import io.vavr.Function1;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import software.amazon.awssdk.services.sqs.model.Message;
 
 @Component
 public class CustomerAdapter implements CustomerPort {
+    private final String queue;
     private final CustomerRepository customerRepository;
+    private final MessagingPort messagingPort;
     private final CustomerMapper mapper;
     private final ObjectMapper objectMapper;
 
-    public CustomerAdapter(CustomerRepository customerRepository,
+    public CustomerAdapter(@Value("${aws.sqs.customer.queue}") String queue,
+                           CustomerRepository customerRepository,
+                           MessagingPort messagingPort,
                            CustomerMapper mapper,
                            ObjectMapper objectMapper) {
+        this.queue = queue;
         this.customerRepository = customerRepository;
+        this.messagingPort = messagingPort;
         this.mapper = mapper;
         this.objectMapper = objectMapper;
     }
@@ -45,6 +55,15 @@ public class CustomerAdapter implements CustomerPort {
     @Override
     public Mono<Void> delete(String id) {
         return customerRepository.deleteById(id);
+    }
+
+    @Override
+    public Flux<Message> readCustomer(Function1<Customer, Mono<Customer>> handle) {
+        return messagingPort.read(queue, handle, readEvent());
+    }
+
+    private CheckedFunction1<Message, Customer> readEvent() {
+        return message -> objectMapper.readValue(message.body(), Customer.class);
     }
 
     @Override

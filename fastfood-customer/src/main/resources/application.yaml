@@ -14,6 +14,15 @@ spring:
     username: ${CUSTOMER_DB_USER:fastfood}
     password: ${CUSTOMER_DB_PASSWORD:Postgres2024!}
 
+aws:
+  sqs:
+    customer:
+      queue: ${SQS_QUEUE_NAME:customer_queue}
+    numberOfMessages: 5
+    waitTimeMessage: 10
+    numberOfRetries: 10
+    visibilityTimeOut: 30
+
 management:
   endpoint:
     loggers:

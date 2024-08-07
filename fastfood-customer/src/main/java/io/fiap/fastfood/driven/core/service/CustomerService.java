@@ -4,10 +4,12 @@ import io.fiap.fastfood.driven.core.domain.customer.port.inbound.CustomerUseCase
 import io.fiap.fastfood.driven.core.domain.customer.port.outbound.CustomerPort;
 import io.fiap.fastfood.driven.core.domain.model.Customer;
 import io.fiap.fastfood.driven.core.exception.BadRequestException;
+import io.vavr.Function1;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import software.amazon.awssdk.services.sqs.model.Message;
 
 @Service
 public class CustomerService implements CustomerUseCase {
@@ -17,6 +19,16 @@ public class CustomerService implements CustomerUseCase {
 
     public CustomerService(CustomerPort customerPort) {
         this.customerPort = customerPort;
+    }
+
+    @Override
+    public Flux<Message> handleEvent() {
+        return customerPort.readCustomer(handle());
+    }
+
+    private Function1<Customer, Mono<Customer>> handle() {
+        return customer -> Mono.just(customer)
+            .flatMap(customerPort::save);
     }
 
     @Override
