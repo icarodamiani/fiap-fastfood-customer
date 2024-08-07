@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "Postgres2024!"
+      POSTGRES_USER: "fastfood"
+      POSTGRES_DB: fastfood-customer
+    networks:
+      - fastfood-customer-network
+    volumes:
+      - ./db/1-create-customer-table.sql:/docker-entrypoint-initdb.d/1-create-customer-table.sql
+    ports:
+      - "5432:5432"
+  sqs:
+    image: softwaremill/elasticmq:1.4.2
+    container_name: fastfood-customer-sqs
+    ports:
+      - "9324:9324"
+      - "9325:9325"
+    volumes:
+      - ./sqs-compose.conf:/opt/elasticmq.conf
+      - sqs_data:/data/db
+    networks:
+      - fastfood-customer-network
+
+volumes:
+  sqs_data:
+    driver: local
+
+networks:
+  fastfood-customer-network:
+    driver: bridge
