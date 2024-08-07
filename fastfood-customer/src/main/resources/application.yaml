@@ -17,7 +17,7 @@ spring:
 aws:
   sqs:
     customer:
-      queue: ${SQS_QUEUE_NAME:customer_queue}
+      queue: ${CUSTOMER_QUEUE_NAME:customer_queue}
     numberOfMessages: 5
     waitTimeMessage: 10
     numberOfRetries: 10
