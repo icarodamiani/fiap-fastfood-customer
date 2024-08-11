@@ -44,10 +44,10 @@ public class CustomerService implements CustomerUseCase {
     }
 
     @Override
-    public Mono<Void> delete(String id) {
-        return Mono.just(id)
+    public Mono<Void> delete(String vat) {
+        return Mono.just(vat)
             .switchIfEmpty(Mono.defer(() -> Mono.error(new BadRequestException())))
-            .flatMap(customerPort::delete);
+            .flatMap(customerPort::deleteByVat);
     }
 
     @Override

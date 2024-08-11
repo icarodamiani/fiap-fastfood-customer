@@ -72,7 +72,7 @@ public class CustomerGrpcServer extends CustomerServiceGrpc.CustomerServiceImplB
 
     @Override
     public void deleteCustomer(DeleteCustomerRequest request, StreamObserver<Empty> responseObserver) {
-        service.delete(request.getId())
+        service.delete(request.getVat())
             .doOnError(throwable -> responseObserver.onError(statusConverter.toGrpcException(throwable)))
             .doOnSuccess(response -> {
                 responseObserver.onNext(Empty.getDefaultInstance());

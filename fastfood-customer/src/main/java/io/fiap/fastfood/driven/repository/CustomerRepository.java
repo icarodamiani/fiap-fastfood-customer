@@ -15,4 +15,6 @@ public interface CustomerRepository extends ReactiveCrudRepository<CustomerEntit
     Mono<CustomerEntity> findByEmail(String email);
 
     Mono<CustomerEntity> findByVat(String vat);
+
+    Mono<Void> deleteByVat(String vat);
 }
