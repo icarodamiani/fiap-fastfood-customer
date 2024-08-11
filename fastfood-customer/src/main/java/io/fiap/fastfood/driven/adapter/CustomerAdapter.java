@@ -63,6 +63,11 @@ public class CustomerAdapter implements CustomerPort {
     }
 
     @Override
+    public Mono<Void> deleteByVat(String vat) {
+        return customerRepository.deleteByVat(vat);
+    }
+
+    @Override
     public Flux<Message> readCustomer(Function1<Customer, Mono<Customer>> handle) {
         return messagingPort.read(queue, handle, readEvent());
     }
