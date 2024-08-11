@@ -53,8 +53,13 @@ public class CustomerAdapter implements CustomerPort {
     }
 
     @Override
-    public Mono<Void> delete(String id) {
-        return customerRepository.deleteById(id);
+    public Mono<Void> delete(String vat) {
+        return customerRepository.deleteById(vat);
+    }
+
+    @Override
+    public Mono<Void> deleteByVat(String vat) {
+        return customerRepository.deleteByVat(vat);
     }
 
     @Override

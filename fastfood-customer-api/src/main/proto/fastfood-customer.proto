@@ -36,7 +36,7 @@ message UpdateCustomerRequest {
 }
 
 message DeleteCustomerRequest {
-    string id = 1;
+    string vat = 1;
 }
 
 message FindAllCustomerRequest {

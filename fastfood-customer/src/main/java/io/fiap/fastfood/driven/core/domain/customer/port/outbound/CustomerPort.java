@@ -14,6 +14,8 @@ public interface CustomerPort {
 
     Mono<Void> delete(String id);
 
+    Mono<Void> deleteByVat(String vat);
+
     Flux<Customer> find(Pageable pageable);
 
     Mono<Customer> findById(String id);
